@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6408218502679059082}
   - component: {fileID: 8061590452849063020}
   - component: {fileID: 3349407487347913234}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Asteroid
   m_TagString: Asteroid
   m_Icon: {fileID: 0}
@@ -191,5 +191,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyedParticlesPrefab: {fileID: 4777500929058835185, guid: e25cd9320b230b948bf754bf0d382abb, type: 3}
-  gameManager: {fileID: 0}
   size: 3

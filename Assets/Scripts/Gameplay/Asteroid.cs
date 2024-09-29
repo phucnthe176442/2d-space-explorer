@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 public class Asteroid : MonoBehaviour
 {
     [SerializeField] private GameObject destroyedParticlesPrefab;
-    public GameManager gameManager;
     public int size = 3;
 
     private void Start()
@@ -18,14 +17,14 @@ public class Asteroid : MonoBehaviour
         var direction = new Vector2(Random.value, Random.value).normalized;
         float spawnSpeed = Random.Range(4f - size, 5f - size);
         rb.AddForce(direction * spawnSpeed, ForceMode2D.Impulse);
-        gameManager.asteroidCount++;
+        GameManager.Instance.AsteroidCount++;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Bullet"))
         {
-            gameManager.asteroidCount--;
+            GameManager.Instance.AsteroidCount--;
             Destroy(other.gameObject);
             if (size > 1)
             {
@@ -33,7 +32,6 @@ public class Asteroid : MonoBehaviour
                 {
                     var asteroid = Instantiate(this, transform.position, Quaternion.identity);
                     asteroid.size = size - 1;
-                    asteroid.gameManager = gameManager;
                 }
             }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     [Header("Object References"), SerializeField] private Transform bulletSpawn;
     [SerializeField] private Rigidbody2D bulletPrefab;
     [SerializeField] private GameObject destroyedParticlesPrefab;
+    [SerializeField] private SpriteRenderer shipRenderer;
 
     private Rigidbody2D _rigidbody2D;
     private bool _isAlive = true, _isAcceleration = false;
@@ -64,13 +66,39 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Asteroid"))
+        if (other.CompareTag("Star")) return;
+        StartCoroutine(IeHit());
+        if (GameManager.Instance.Score == 0)
         {
             _isAlive = false;
-            var gameManager = FindAnyObjectByType<GameManager>();
-            gameManager.GameOver();
             Instantiate(destroyedParticlesPrefab, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            StartCoroutine(IeEnd());
+            return;
         }
+
+        GameManager.Instance.Score--;
+    }
+
+    private IEnumerator IeEnd()
+    {
+        _rigidbody2D.velocity = Vector2.zero;
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
+        GameManager.Instance.GameOver();
+    }
+
+    private IEnumerator IeHit()
+    {
+        shipRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        shipRenderer.color = Color.white;
+        yield return new WaitForSeconds(0.1f);
+        shipRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        shipRenderer.color = Color.white;
+        yield return new WaitForSeconds(0.1f);
+        shipRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        shipRenderer.color = Color.white;
     }
 }
