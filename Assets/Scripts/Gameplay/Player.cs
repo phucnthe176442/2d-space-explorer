@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody2D bulletPrefab;
     [SerializeField] private GameObject destroyedParticlesPrefab;
     [SerializeField] private SpriteRenderer shipRenderer;
+    [SerializeField] private GameObject fireEngineGo;
+    [SerializeField] private Collider2D hitBox;
 
     private Rigidbody2D _rigidbody2D;
     private bool _isAlive = true, _isAcceleration = false;
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
     private void HandlerShooting()
     {
         if (!Input.GetKeyDown(KeyCode.Space)) return;
-        var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
+        var bullet = Instantiate(bulletPrefab, bulletSpawn.position, transform.rotation);
 
         var shipVelocity = _rigidbody2D.velocity;
         var shipDirection = transform.up;
@@ -62,7 +64,11 @@ public class Player : MonoBehaviour
             transform.Rotate(-shipRotationSpeed * Time.deltaTime * transform.forward);
     }
 
-    private void HandleShipAcceleration() { _isAcceleration = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W); }
+    private void HandleShipAcceleration()
+    {
+        _isAcceleration = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W);
+        fireEngineGo.SetActive(_isAcceleration);
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -89,6 +95,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator IeHit()
     {
+        hitBox.enabled = false;
         shipRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         shipRenderer.color = Color.white;
@@ -100,5 +107,6 @@ public class Player : MonoBehaviour
         shipRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         shipRenderer.color = Color.white;
+        hitBox.enabled = true;
     }
 }
